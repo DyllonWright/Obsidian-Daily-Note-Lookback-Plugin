@@ -140,12 +140,14 @@
 	font-style: italic;
 }
 
-/* Expanded content */
+/* Expanded content — a soft accent-tinted wash rather than a hard panel;
+ * falls back to the theme's alt background where color-mix lacks support. */
 .dnl-content {
 	position: relative;
 	margin-top: 0.35em;
 	padding: 0.4em 1.8em 0.4em 0.65em;
 	background-color: var(--background-primary-alt);
+	background-color: color-mix(in srgb, var(--dnl-accent) 5%, transparent);
 	border-radius: var(--radius-s);
 	animation: dnl-fade 140ms ease-in-out;
 }
