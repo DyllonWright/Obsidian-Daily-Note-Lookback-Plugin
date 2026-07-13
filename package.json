@@ -1,6 +1,6 @@
 {
 	"name": "daily-note-lookback",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Obsidian plugin: render lazy lookbacks of any daily-note section from previous years, months, or custom intervals — collapsed until expanded, far lighter than native embeds.",
 	"main": "main.js",
 	"scripts": {
@@ -8,7 +8,13 @@
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"test": "node test/run.mjs"
 	},
-	"keywords": ["obsidian", "obsidian-plugin", "daily-notes", "journal", "lookback"],
+	"keywords": [
+		"obsidian",
+		"obsidian-plugin",
+		"daily-notes",
+		"journal",
+		"lookback"
+	],
 	"author": "Dyllon Wright",
 	"license": "MIT",
 	"devDependencies": {

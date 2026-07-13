@@ -286,9 +286,11 @@ export class LookbackController extends MarkdownRenderChild {
 		const markdown = await this.extractMarkdown(row, file);
 		if (markdown === null) return;
 
-		const pop = document.body.createDiv({ cls: "dnl-popover" });
-		pop.style.left = `${Math.min(evt.clientX + 12, window.innerWidth - 420)}px`;
-		pop.style.top = `${Math.min(evt.clientY + 12, window.innerHeight - 220)}px`;
+		// activeDocument/activeWindow keep the popover in the right window
+		// when the note lives in a popout.
+		const pop = activeDocument.body.createDiv({ cls: "dnl-popover" });
+		pop.style.left = `${Math.min(evt.clientX + 12, activeWindow.innerWidth - 420)}px`;
+		pop.style.top = `${Math.min(evt.clientY + 12, activeWindow.innerHeight - 220)}px`;
 		await MarkdownRenderer.render(this.plugin.app, markdown, pop, file.path, this);
 		this.popoverEl = pop;
 	}

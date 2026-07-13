@@ -1,8 +1,8 @@
 {
 	"id": "daily-note-lookback",
 	"name": "Daily Note Lookback",
-	"version": "1.0.0",
-	"minAppVersion": "1.1.0",
+	"version": "1.0.1",
+	"minAppVersion": "1.4.11",
 	"description": "Render lazy lookbacks of any daily-note section from previous years, months, or custom intervals — collapsed until expanded, far lighter than native embeds.",
 	"author": "Dyllon Wright",
 	"authorUrl": "https://github.com/DyllonWright",

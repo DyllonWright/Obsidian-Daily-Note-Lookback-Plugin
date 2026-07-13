@@ -4,6 +4,8 @@ import {
 	Plugin,
 	TAbstractFile,
 	TFile,
+	TFolder,
+	Vault,
 	moment,
 	normalizePath,
 	parseYaml,
@@ -221,23 +223,30 @@ export default class DailyNoteLookbackPlugin extends Plugin {
 
 	/**
 	 * Earliest parseable daily note in the folder — filename inspection only,
-	 * zero file reads. Cached until something changes inside the folder.
+	 * zero file reads, scoped to the daily-notes folder rather than the whole
+	 * vault. Cached until something changes inside the folder.
 	 */
 	private earliestDailyNote(folder: string, format: string): string | null {
 		const key = `${folder}|${format}`;
 		const cached = this.earliestCache.get(key);
 		if (cached !== undefined) return cached;
 
+		const rootAf = folder ? this.app.vault.getAbstractFileByPath(folder) : this.app.vault.getRoot();
+		if (!(rootAf instanceof TFolder)) {
+			this.earliestCache.set(key, null);
+			return null;
+		}
+
 		let min: string | null = null;
 		const prefix = folder ? folder + "/" : "";
-		for (const file of this.app.vault.getMarkdownFiles()) {
-			if (prefix && !file.path.startsWith(prefix)) continue;
-			const rel = file.path.slice(prefix.length, -3);
+		Vault.recurseChildren(rootAf, (af) => {
+			if (!(af instanceof TFile) || af.extension !== "md") return;
+			const rel = af.path.startsWith(prefix) ? af.path.slice(prefix.length, -3) : af.path.slice(0, -3);
 			const m = momentParse(rel, format, true);
-			if (!m.isValid()) continue;
+			if (!m.isValid()) return;
 			const iso = m.format("YYYY-MM-DD");
 			if (min === null || compareISO(iso, min) < 0) min = iso;
-		}
+		});
 		this.earliestCache.set(key, min);
 		return min;
 	}
