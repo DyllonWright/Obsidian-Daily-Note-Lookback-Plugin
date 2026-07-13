@@ -1,0 +1,12 @@
+flowchart LR
+    subgraph note["Daily note 2026-07-13"]
+        B1["lookback block:<br/>sections: Daily Meditation<br/>every: 1y"]
+    end
+    B1 --> R["Rows render collapsed:<br/>2025 · 2024 · 2023"]
+    R --> O(["Note opens instantly —<br/>even on a slow phone"])
+    R -->|"tap 2024"| X["One section from one file loads,<br/>on demand"]
+
+    subgraph old["The old way: native embeds"]
+        N["Three full files parse<br/>at every note open"]
+    end
+    N -.-> S(["Sluggish load,<br/>heavier every year"])

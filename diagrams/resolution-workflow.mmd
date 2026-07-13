@@ -1,0 +1,14 @@
+flowchart TD
+    A(["lookback code block appears<br/>in a daily note"]) --> B{"Anchor date resolves?<br/>(note title, or date: key)"}
+    B -->|no| ERR["In-block hint:<br/>add date: YYYY-MM-DD"]
+    B -->|yes| C["Build the offset series"]
+    C --> D{"since: set?"}
+    D -->|yes| F["Series stops at since"]
+    D -->|no| E["Smart cutoff — series stops at your<br/>earliest daily note (filenames only)"]
+    F --> G["Merge ad-hoc offsets ·<br/>dedupe · sort nearest-first"]
+    E --> G
+    G --> H{"Note exists for<br/>each target date?"}
+    H -->|yes| I["Collapsed row — zero file reads<br/>heading · date link · chevron"]
+    H -->|no| J["Muted placeholder row<br/>(hideable)"]
+    I -->|"user expands"| K["Read that one file, slice the<br/>requested section via the heading cache"]
+    K --> L(["Render just that section —<br/>native-embed semantics, none of the weight"])
