@@ -253,6 +253,22 @@ await ok("coerceConfig: every can switch off with null/false", () => {
 	assert.equal(coerceConfig({ every: false }, DEFAULT_CONFIG).config.every, null);
 });
 
+await ok("coerceConfig: style accepts the four presets case-insensitively", () => {
+	assert.equal(coerceConfig({ style: "Ornate" }, DEFAULT_CONFIG).config.style, "ornate");
+	assert.equal(coerceConfig({ style: "minimal" }, DEFAULT_CONFIG).config.style, "minimal");
+	const { config, warnings } = coerceConfig({ style: "baroque" }, DEFAULT_CONFIG);
+	assert.equal(config.style, "default");
+	assert.equal(warnings.length, 1);
+});
+
+await ok("coerceConfig: accent takes a CSS color string, null clears it", () => {
+	assert.equal(coerceConfig({ accent: "#7c3aed" }, DEFAULT_CONFIG).config.accent, "#7c3aed");
+	assert.equal(coerceConfig({ accent: "rebeccapurple" }, DEFAULT_CONFIG).config.accent, "rebeccapurple");
+	assert.equal(coerceConfig({ accent: null }, DEFAULT_CONFIG).config.accent, null);
+	const { warnings } = coerceConfig({ accent: 42 }, DEFAULT_CONFIG);
+	assert.equal(warnings.length, 1);
+});
+
 await ok("coerceConfig: scalar YAML body warns and falls back", () => {
 	const { config, warnings } = coerceConfig("just a string", DEFAULT_CONFIG);
 	assert.deepEqual(config, DEFAULT_CONFIG);

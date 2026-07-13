@@ -1,17 +1,25 @@
-/* Daily Note Lookback — theme-inherited styling, no hard-coded colors. */
+/* Daily Note Lookback — theme-inherited styling, no hard-coded colors.
+ * The accent flows from the vault theme (--interactive-accent) unless a
+ * block or setting overrides --dnl-accent. Four presets restyle the block:
+ * dnl-style-default · dnl-style-minimal · dnl-style-elegant · dnl-style-ornate
+ */
 
 .dnl-container {
+	--dnl-accent: var(--interactive-accent);
 	position: relative;
 	padding: 0.1em 0;
 }
 
-/* Toolbar */
+/* Toolbar — sits left, clear of Obsidian's edit-block button in the
+ * top-right corner of live-preview code blocks. */
 .dnl-toolbar {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: flex-start;
+	gap: 0.6em;
 	min-height: 1.4em;
 	margin-bottom: 0.15em;
+	padding-right: 3.5em; /* keep the corner free even if content wraps */
 }
 
 .dnl-count {
@@ -51,7 +59,7 @@
 
 /* Rows */
 .dnl-row {
-	border-left: 2px solid var(--interactive-accent);
+	border-left: 2px solid var(--dnl-accent);
 	padding-left: 0.65em;
 	margin-bottom: 0.5em;
 }
@@ -71,6 +79,7 @@
 	margin: 0 !important;
 	cursor: pointer;
 	display: inline;
+	font-size: 1.1em;
 }
 
 .dnl-heading-missing {
@@ -116,7 +125,7 @@
 }
 
 .dnl-dot-exists {
-	background-color: var(--interactive-accent);
+	background-color: var(--dnl-accent);
 }
 
 .dnl-link {
@@ -212,4 +221,90 @@
 	color: var(--text-faint);
 	font-size: var(--font-ui-small);
 	font-style: italic;
+}
+
+/* ---------------------------------------------------------------------------
+ * Style presets
+ * ------------------------------------------------------------------------ */
+
+/* minimal — quiet, monochrome, tighter */
+.dnl-style-minimal .dnl-row {
+	border-left: 1px solid var(--background-modifier-border);
+	margin-bottom: 0.35em;
+}
+
+.dnl-style-minimal .dnl-heading {
+	font-size: 1em;
+	font-weight: 500;
+}
+
+.dnl-style-minimal .dnl-dot {
+	display: none;
+}
+
+.dnl-style-minimal .dnl-content {
+	background-color: transparent;
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+}
+
+.dnl-style-minimal .dnl-caption {
+	opacity: 0.7;
+}
+
+/* elegant — the in-between: reading typeface, a touch more air */
+.dnl-style-elegant .dnl-heading {
+	font-family: var(--font-text);
+	font-size: 1.2em;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+}
+
+.dnl-style-elegant .dnl-caption {
+	font-style: italic;
+}
+
+.dnl-style-elegant .dnl-row {
+	border-left: 2px solid var(--dnl-accent);
+	padding-left: 0.85em;
+	margin-bottom: 0.7em;
+}
+
+.dnl-style-elegant .dnl-content {
+	border: 1px solid var(--background-modifier-border);
+	background-color: var(--background-primary);
+}
+
+/* ornate — the flourish: small caps, doubled rule, a printer's mark */
+.dnl-style-ornate .dnl-heading {
+	font-family: var(--font-text);
+	font-variant: small-caps;
+	font-size: 1.3em;
+	font-weight: 650;
+	letter-spacing: 0.04em;
+}
+
+.dnl-style-ornate .dnl-heading::before {
+	content: "❧ ";
+	color: var(--dnl-accent);
+	font-variant: normal;
+	font-size: 0.85em;
+}
+
+.dnl-style-ornate .dnl-row {
+	border-left: 4px double var(--dnl-accent);
+	padding-left: 0.9em;
+	margin-bottom: 0.8em;
+}
+
+.dnl-style-ornate .dnl-caption {
+	font-family: var(--font-text);
+	font-style: italic;
+}
+
+.dnl-style-ornate .dnl-content {
+	border: 1px solid var(--background-modifier-border);
+	border-left: 2px solid var(--dnl-accent);
+	background-color: var(--background-primary);
+	box-shadow: var(--shadow-s);
 }

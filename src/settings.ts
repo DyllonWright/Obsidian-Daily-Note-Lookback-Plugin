@@ -1,5 +1,5 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
-import { DEFAULT_CONFIG, LookbackConfig, parseInterval, parseISO } from "./engine";
+import { DEFAULT_CONFIG, LookbackConfig, LookbackStyle, STYLE_NAMES, parseInterval, parseISO } from "./engine";
 import type DailyNoteLookbackPlugin from "./main";
 
 export interface LookbackSettings {
@@ -131,6 +131,29 @@ export class LookbackSettingTab extends PluginSettingTab {
 			.addText((t) =>
 				t.setPlaceholder("(auto)").setValue(d.format ?? "").onChange(async (v) => {
 					d.format = v.trim() || null;
+					await save();
+				})
+			);
+
+		new Setting(containerEl).setName("Appearance").setHeading();
+
+		new Setting(containerEl)
+			.setName("Style")
+			.setDesc("Four looks: default (accent rule), minimal (quiet monochrome), elegant (reading typeface), ornate (small caps and flourish). Blocks can override with style:.")
+			.addDropdown((dd) => {
+				for (const s of STYLE_NAMES) dd.addOption(s, s);
+				dd.setValue(d.style).onChange(async (v) => {
+					d.style = v as LookbackStyle;
+					await save();
+				});
+			});
+
+		new Setting(containerEl)
+			.setName("Accent color")
+			.setDesc("Any CSS color, e.g. #7c3aed or rebeccapurple. Leave empty to inherit your theme's accent.")
+			.addText((t) =>
+				t.setPlaceholder("(theme accent)").setValue(d.accent ?? "").onChange(async (v) => {
+					d.accent = v.trim() || null;
 					await save();
 				})
 			);

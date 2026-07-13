@@ -85,14 +85,25 @@ expanded: true                           # start expanded instead of collapsed
 folder: Daily Notes                      # override auto-discovery
 format: YYYY-MM-DD                       # override auto-discovery
 missing: hide                            # hide placeholder rows for absent notes
+style: elegant                           # default | minimal | elegant | ornate
+accent: rebeccapurple                    # any CSS color; empty = theme accent
 ```
 ````
 
 Yearly rows label as the bare year (`2024`); other intervals label as the date plus a caption like `3 months ago`. Explicit `offsets` always render, even past the cutoff — you asked for them by name.
 
+## Styles
+
+Colors always flow from your active theme — the accent rule, dots, and flourishes pick up the theme's accent color automatically, and `accent:` (per block or in settings) swaps in any CSS color you like. On top of that, four presets set the typographic mood:
+
+- **default** — clean accent rule, slightly enlarged headings; disappears into most themes.
+- **minimal** — quiet monochrome hairline, no dots, no background; for people who find the default too loud.
+- **elegant** — your reading typeface on the headings, italic captions, bordered content; the in-between.
+- **ornate** — small caps, a doubled rule, a printer's fleuron (❧) before each heading; a little ceremony for your archives.
+
 ## Settings
 
-- **Block defaults** — every block key above, as a global default.
+- **Block defaults** — every block key above, as a global default (including style and accent color).
 - **Hover preview** — off by default; hovering a collapsed row pops up the extracted section without expanding it (reads the file only on hover).
 - **Remember expansion state** — rows you expand stay expanded next time, per note, for the most recent 200 notes.
 - **Strict heading match** — require the exact written heading, emphasis marks and case included.

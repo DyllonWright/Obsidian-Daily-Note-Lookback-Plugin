@@ -58,12 +58,14 @@ export class LookbackController extends MarkdownRenderChild {
 	}
 
 	private render(): void {
-		const root = this.containerEl.createDiv({ cls: "dnl-container" });
+		const root = this.containerEl.createDiv({ cls: `dnl-container dnl-style-${this.cfg.style}` });
+		if (this.cfg.accent) root.style.setProperty("--dnl-accent", this.cfg.accent);
 
 		const visible = this.rows.filter((r) => r.file !== null || this.cfg.missing === "show");
 		const found = this.rows.filter((r) => r.file !== null).length;
 
-		// Toolbar: count badge + expand/collapse-all.
+		// Toolbar: count badge + expand/collapse-all, kept away from the
+		// top-right corner where Obsidian places its edit-block button.
 		const bar = root.createDiv({ cls: "dnl-toolbar" });
 		bar.createSpan({
 			cls: "dnl-count",

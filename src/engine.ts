@@ -203,6 +203,10 @@ export function earliestISO(dates: string[]): string | null {
 // Block config coercion
 // ---------------------------------------------------------------------------
 
+export type LookbackStyle = "default" | "minimal" | "elegant" | "ornate";
+
+export const STYLE_NAMES: LookbackStyle[] = ["default", "minimal", "elegant", "ornate"];
+
 export interface LookbackConfig {
 	sections: string[];
 	every: string | null;
@@ -214,6 +218,9 @@ export interface LookbackConfig {
 	folder: string | null;
 	format: string | null;
 	missing: "show" | "hide";
+	style: LookbackStyle;
+	/** CSS color overriding the theme accent; null inherits the vault theme. */
+	accent: string | null;
 }
 
 export const DEFAULT_CONFIG: LookbackConfig = {
@@ -227,6 +234,8 @@ export const DEFAULT_CONFIG: LookbackConfig = {
 	folder: null,
 	format: null,
 	missing: "show",
+	style: "default",
+	accent: null,
 };
 
 const KNOWN_KEYS = new Set(Object.keys(DEFAULT_CONFIG));
@@ -313,6 +322,17 @@ export function coerceConfig(raw: unknown, defaults: LookbackConfig): { config: 
 		const v = typeof obj.missing === "string" ? obj.missing.trim().toLowerCase() : "";
 		if (v === "show" || v === "hide") cfg.missing = v;
 		else warnings.push(`"missing" needs "show" or "hide"`);
+	}
+	if ("style" in obj) {
+		const v = typeof obj.style === "string" ? obj.style.trim().toLowerCase() : "";
+		if ((STYLE_NAMES as string[]).includes(v)) cfg.style = v as LookbackStyle;
+		else warnings.push(`"style" needs one of: ${STYLE_NAMES.join(", ")}`);
+	}
+	if ("accent" in obj) {
+		const v = obj.accent;
+		if (v === null || v === false) cfg.accent = null;
+		else if (typeof v === "string" && v.trim() && v.trim().length <= 64) cfg.accent = v.trim();
+		else warnings.push(`"accent" needs a CSS color like #7c3aed or rebeccapurple`);
 	}
 	return { config: cfg, warnings };
 }
