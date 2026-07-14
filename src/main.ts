@@ -169,14 +169,19 @@ export default class DailyNoteLookbackPlugin extends Plugin {
 			offsets,
 		});
 
-		// Rows resolve by constructed path — a metadata lookup, never a read.
+		// Rows resolve by constructed path first, then by Obsidian's own link
+		// resolution — the same search a [[wikilink]] performs — so notes
+		// archived into nested folders keep appearing. Metadata lookups only,
+		// never a read.
 		const rows: ResolvedRow[] = targets
 			.filter((t) => compareISO(t.iso, anchorISO) < 0)
 			.map((t) => {
 				const name = momentParse(t.iso, "YYYY-MM-DD", true).format(format);
 				const path = normalizePath(folder ? `${folder}/${name}.md` : `${name}.md`);
 				const af = this.app.vault.getAbstractFileByPath(path);
-				return { target: t, file: af instanceof TFile ? af : null, displayName: name };
+				let file = af instanceof TFile ? af : null;
+				if (!file) file = this.app.metadataCache.getFirstLinkpathDest(name, ctx.sourcePath);
+				return { target: t, file, displayName: name };
 			});
 
 		ctx.addChild(new LookbackController(this, el, config, ctx.sourcePath, rows));
@@ -239,10 +244,14 @@ export default class DailyNoteLookbackPlugin extends Plugin {
 
 		let min: string | null = null;
 		const prefix = folder ? folder + "/" : "";
+		const flatFormat = !format.includes("/");
 		Vault.recurseChildren(rootAf, (af) => {
 			if (!(af instanceof TFile) || af.extension !== "md") return;
 			const rel = af.path.startsWith(prefix) ? af.path.slice(prefix.length, -3) : af.path.slice(0, -3);
-			const m = momentParse(rel, format, true);
+			let m = momentParse(rel, format, true);
+			// Archived notes nest in subfolders the format never mentions;
+			// for flat formats, the basename alone still identifies them.
+			if (!m.isValid() && flatFormat) m = momentParse(af.basename, format, true);
 			if (!m.isValid()) return;
 			const iso = m.format("YYYY-MM-DD");
 			if (min === null || compareISO(iso, min) < 0) min = iso;

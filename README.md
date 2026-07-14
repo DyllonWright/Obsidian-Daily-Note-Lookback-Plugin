@@ -119,6 +119,7 @@ Colors always flow from your active theme — the accent rule, dots, and flouris
 Every tool encodes assumptions; these deserve stating plainly rather than discovering painfully.
 
 - **Collapsed rows cost nothing.** Rendering a block touches filenames and the metadata cache only. File contents load on expand (or on hover, if you switch hover preview on).
+- **Nested archives resolve.** Row lookup tries the exact path in your daily folder first, then falls back to Obsidian's link resolution — the same search a `[[2025-07-14]]` wikilink performs — so notes moved into nested archive folders keep appearing.
 - **Daily notes anchor the math.** The note's own title supplies the anchor date; a `date:` key covers everything else. Weekly or monthly periodic notes can host a block via `date:`, but v1 does not parse their titles.
 - **Read-only rendering.** Lookback content renders like an embed — edits happen in the source note, one click away.
 - **The recurring series needs a floor.** `since:` sets one explicitly; otherwise the earliest parseable daily note serves. With neither (an empty folder), only explicit `offsets` render.
